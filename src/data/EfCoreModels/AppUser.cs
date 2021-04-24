@@ -8,6 +8,6 @@ namespace data.EfCoreModels
 {
     public class AppUser: IdentityUser
     {
-      public decimal Amount { get; set; }
+      public decimal WalletAmount { get; set; }
     }
 }
