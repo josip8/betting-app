@@ -16,5 +16,6 @@ namespace data.EfCoreModels
     public int AwayTeamId { get; set; }
     public ICollection<TicketPairTip> TicketPairTips { get; set; }
     public ICollection<PairTip> PairTips { get; set; }
+    public ICollection<Ticket> TicketsWithSpecialOffer { get; set; }
   }
 }

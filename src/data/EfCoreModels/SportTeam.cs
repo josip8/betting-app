@@ -13,5 +13,7 @@ namespace data.EfCoreModels
     public Sport Sport { get; set; }
     public int SportId { get; set; }
     public ICollection<SportTip> SportTips { get; set; }
+    public ICollection<Pair> HomePairs { get; set; }
+    public ICollection<Pair> AwayPairs { get; set; }
   }
 }
