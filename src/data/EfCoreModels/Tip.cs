@@ -10,5 +10,7 @@ namespace data.EfCoreModels
   {
     public string TipName { get; set; }
     public string Description { get; set; }
+    public ICollection<PairTip> PairTips { get; set; }
+    public ICollection<SportTip> SportTips { get; set }
   }
 }

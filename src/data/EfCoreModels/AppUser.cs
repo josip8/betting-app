@@ -9,5 +9,7 @@ namespace data.EfCoreModels
     public class AppUser: IdentityUser
     {
       public decimal WalletAmount { get; set; }
+      public ICollection<Transaction> Transactions { get; set; }
+      public ICollection<Ticket> Tickets { get; set; }
     }
 }

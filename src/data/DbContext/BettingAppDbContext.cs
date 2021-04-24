@@ -15,7 +15,18 @@ namespace data.Context
       options.UseNpgsql("Server=localhost;Port=5432;Database=betting-app;User ID=test;Password=test;");
     }
 
-    public BettingAppDbContext(DbContextOptions<BettingAppDbContext> options) : base (options) {}
+    public BettingAppDbContext(DbContextOptions<BettingAppDbContext> options) : base(options) { }
 
+    public DbSet<Transaction> Transaction { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+      base.OnModelCreating(modelBuilder);
+
+      modelBuilder.Entity<Transaction>(entity =>
+      {
+
+      });
+    }
   }
 }

@@ -9,5 +9,6 @@ namespace data.EfCoreModels
   public class Sport : EntityBase
   {
     public string Name { get; set; }
+    public ICollection<SportTeam> SportTeams { get; set; }
   }
 }

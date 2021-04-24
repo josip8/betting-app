@@ -12,8 +12,9 @@ namespace data.EfCoreModels
     public float SpecialOfferModifier { get; set; }
     public SportTeam HomeTeam { get; set; }
     public int HomeTeamId { get; set; }
+    public SportTeam AwayTeam { get; set; }
     public int AwayTeamId { get; set; }
-    public ICollection<TicketPair> TicketPair { get; set; }
-    public ICollection<PairTip> PairTip { get; set; }
+    public ICollection<TicketPairTip> TicketPairTips { get; set; }
+    public ICollection<PairTip> PairTips { get; set; }
   }
 }
