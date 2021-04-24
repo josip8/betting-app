@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using data.Context;
+using data.EfCoreModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +30,10 @@ namespace server
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddDbContext<BettingAppDbContext>(options =>
-                options.UseNpgsql(Configuration["ConnectionStrings:Redis"]));
+                options.UseNpgsql(Configuration["ConnectionStrings:Database"]));
+
+      services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<BettingAppDbContext>().AddDefaultTokenProviders();
+
 
       services.AddControllers();
       services.AddSwaggerGen(c =>
@@ -48,13 +53,23 @@ namespace server
       }
 
       app.UseRouting();
-
+      app.UseAuthentication();
       app.UseAuthorization();
 
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapControllers();
       });
+
+      Migrate(app);
+    }
+
+    public void Migrate(IApplicationBuilder builder)
+    {
+      using var scope = builder.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
+      using var ctx = scope.ServiceProvider.GetRequiredService<BettingAppDbContext>();
+
+      ctx.Database.Migrate();
     }
   }
 }
