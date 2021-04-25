@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace server.Controllers
 {
@@ -30,20 +31,33 @@ namespace server.Controllers
       if (!ModelState.IsValid) return BadRequest("Invalid model");
       var user = await _userManager.FindByEmailAsync("test@test.com");
       if (newTicket.MoneyAmount > user.WalletAmount) return BadRequest("Insufficient funds");
-
-
-      foreach (var pairTipId in newTicket.PairTips)
-      {
-        var pairTip = _context.PairTip.FirstOrDefault(x => x.Id == pairTipId);
-        if (pairTip?.Status != (int)PairStatus.Pending || pairTip.Coefficient < 1) return BadRequest("Pair/tip not valid");
-      }
+      float coefficient = 1;
 
       var ticket = new Ticket
       {
-        Status = (int) TicketStatus.Pending,
-        MoneyPaid = newTicket.MoneyAmount,
-        PrizeAmount = 100
+        Status = (int)TicketStatus.Pending,
+        MoneyPaid = newTicket.MoneyAmount
       };
+
+      foreach (var pairTipId in newTicket.PairTips)
+      {
+        // validate and calculate
+        var pairTip = _context.PairTip.Include(x => x.Pair).FirstOrDefault(x => x.Id == pairTipId);
+        if (pairTip?.Status != (int)PairStatus.Pending || pairTip.Coefficient < 1) return BadRequest("Pair/tip not valid");
+        if (newTicket.SuperTip == pairTip.Id) 
+        {
+          coefficient *= pairTip.Pair.SpecialOfferModifier;
+        } 
+        coefficient *= pairTip.Coefficient;
+        await _context.TicketPairTip.AddAsync(new TicketPairTip { Ticket = ticket, PairTip = pairTip });
+      }
+
+      ticket.PrizeAmount = (newTicket.MoneyAmount - newTicket.MoneyAmount * (decimal)0.05) * (decimal)coefficient;
+      ticket.ManipulativeCosts = newTicket.MoneyAmount * (decimal)0.05;
+      ticket.Coefficient = coefficient;
+      await _context.Ticket.AddAsync(ticket);
+
+      _context.SaveChanges();
       return Ok();
     }
 
