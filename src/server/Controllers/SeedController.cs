@@ -167,8 +167,7 @@ namespace server.Controllers
           throw new Exception("Tip does not exist");
       }
 
-      return coefficient;
-
+      return coefficient > 1 ? coefficient : 0;
     }
 
     private static int GenerateRandomInt(int a, int b)
