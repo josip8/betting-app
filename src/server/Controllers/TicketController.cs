@@ -31,12 +31,21 @@ namespace server.Controllers
       var user = await _userManager.FindByEmailAsync("test@test.com");
       if (newTicket.MoneyAmount > user.WalletAmount) return BadRequest("Insufficient funds");
 
+
+      foreach (var pairTipId in newTicket.PairTips)
+      {
+        var pairTip = _context.PairTip.FirstOrDefault(x => x.Id == pairTipId);
+        if (pairTip?.Status != (int)PairStatus.Pending || pairTip.Coefficient < 1) return BadRequest("Pair/tip not valid");
+      }
+
       var ticket = new Ticket
       {
         Status = (int) TicketStatus.Pending,
+        MoneyPaid = newTicket.MoneyAmount,
         PrizeAmount = 100
       };
       return Ok();
     }
+
   }
 }

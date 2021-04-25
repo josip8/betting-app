@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using data.Context;
@@ -9,9 +10,10 @@ using data.Context;
 namespace data.Migrations
 {
     [DbContext(typeof(BettingAppDbContext))]
-    partial class BettingAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210425213537_StatusMoneyPaid")]
+    partial class StatusMoneyPaid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

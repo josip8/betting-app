@@ -11,4 +11,11 @@ namespace server.Models
     Success,
     Fail
   }
+
+  public enum PairStatus
+  {
+    Pending,
+    Success,
+    Fail
+  }
 }

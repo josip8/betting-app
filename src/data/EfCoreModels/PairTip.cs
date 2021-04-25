@@ -13,6 +13,7 @@ namespace data.EfCoreModels
     public Tip Tip { get; set; }
     public int TipId { get; set; }
     public float Coefficient { get; set; }
+    public int Status { get; set; }
     public ICollection<TicketPairTip> TicketPairTips { get; set; }
   }
 }

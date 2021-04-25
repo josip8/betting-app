@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using data.Context;
@@ -9,9 +10,10 @@ using data.Context;
 namespace data.Migrations
 {
     [DbContext(typeof(BettingAppDbContext))]
-    partial class BettingAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210425210325_MoneyPayed")]
+    partial class MoneyPayed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -280,9 +282,6 @@ namespace data.Migrations
                     b.Property<int>("PairId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
                     b.Property<int>("TipId")
                         .HasColumnType("integer");
 
@@ -375,8 +374,8 @@ namespace data.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<float>("Coefficient")
-                        .HasColumnType("real");
+                    b.Property<int>("Coefficient")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAddOrUpdate()

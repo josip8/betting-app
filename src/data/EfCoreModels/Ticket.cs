@@ -9,8 +9,9 @@ namespace data.EfCoreModels
   public class Ticket : EntityBase
   {
     public int Status { get; set; }
-    public int PrizeAmount { get; set; }
-    public int Coefficient { get; set; }
+    public decimal PrizeAmount { get; set; }
+    public decimal MoneyPaid { get; set; }
+    public float Coefficient { get; set; }
     public decimal ManipulativeCosts { get; set; }
     public Pair SpecialOfferPair { get; set; }
     public int? SpecialOfferPairId { get; set; }
