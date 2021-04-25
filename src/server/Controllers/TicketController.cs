@@ -1,5 +1,7 @@
-﻿using data.EfCoreModels;
+﻿using data.Context;
+using data.EfCoreModels;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using server.Models;
 using System;
@@ -14,11 +16,21 @@ namespace server.Controllers
   [ApiController]
   public class TicketController : ControllerBase
   {
+    private readonly BettingAppDbContext _context;
+    private readonly UserManager<AppUser> _userManager;
+    public TicketController(BettingAppDbContext context, UserManager<AppUser> userManager)
+    {
+      _context = context;
+      _userManager = userManager;
+    }
 
-    [HttpGet]
+    [HttpPost]
     public async Task<IActionResult> NewTicket([FromBody] NewTicket newTicket)
     {
-      string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      if (!ModelState.IsValid) return BadRequest("Invalid model");
+      var user = await _userManager.FindByEmailAsync("test@test.com");
+      if (newTicket.MoneyAmount > user.WalletAmount) return BadRequest("Insufficient funds");
+
       var ticket = new Ticket
       {
         Status = (int) TicketStatus.Pending,

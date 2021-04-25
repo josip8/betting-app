@@ -120,7 +120,8 @@ namespace server.Controllers
         HomeTeam = teamHome,
         AwayTeam = teamAway,
         SpecialOffer = IsSpecialOffer,
-        SpecialOfferModifier = 1.1f
+        SpecialOfferModifier = 1.1f,
+        GameStart = DateTime.Now.AddMinutes(GenerateRandomInt(5, 30))
       };
       await _context.Pair.AddAsync(newPair);
 
