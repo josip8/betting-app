@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using data.Context;
@@ -9,9 +10,10 @@ using data.Context;
 namespace data.Migrations
 {
     [DbContext(typeof(BettingAppDbContext))]
-    partial class BettingAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210425120031_CreatedDate")]
+    partial class CreatedDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,16 +230,14 @@ namespace data.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("HomeTeamId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<bool>("SpecialOffer")
                         .HasColumnType("boolean");
@@ -266,13 +266,11 @@ namespace data.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("PairId")
                         .HasColumnType("integer");
@@ -298,13 +296,11 @@ namespace data.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -323,16 +319,14 @@ namespace data.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -379,16 +373,14 @@ namespace data.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<decimal>("ManipulativeCosts")
                         .HasColumnType("numeric");
 
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("PrizeAmount")
                         .HasColumnType("integer");
@@ -441,16 +433,14 @@ namespace data.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("TipName")
                         .HasColumnType("text");
@@ -472,13 +462,11 @@ namespace data.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone")
-                        .HasDefaultValueSql("now()");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<decimal>("NewAmount")
                         .HasColumnType("numeric");

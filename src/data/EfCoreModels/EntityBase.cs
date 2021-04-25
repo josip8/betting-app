@@ -12,7 +12,7 @@ namespace data.EfCoreModels
   {
     public int Id { get; set; }
 
-    [Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [Required, DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     [DataType(DataType.Date)]
     public DateTime Created { get; set; }
 

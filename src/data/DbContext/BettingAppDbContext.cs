@@ -34,27 +34,37 @@ namespace data.Context
       modelBuilder.Entity<Transaction>(entity =>
       {
         entity.HasOne(e => e.User).WithMany(u => u.Transactions).HasForeignKey(e => e.UserId).IsRequired(true);
+        entity.Property(s => s.Created).HasDefaultValueSql("now()");
+        entity.Property(s => s.Modified).HasDefaultValueSql("now()");
       });
 
       modelBuilder.Entity<Pair>(entity =>
       {
         entity.HasOne(e => e.HomeTeam).WithMany(u => u.HomePairs).HasForeignKey(e => e.HomeTeamId).IsRequired(true);
         entity.HasOne(e => e.AwayTeam).WithMany(u => u.AwayPairs).HasForeignKey(e => e.AwayTeamId).IsRequired(true);
+        entity.Property(s => s.Created).HasDefaultValueSql("now()");
+        entity.Property(s => s.Modified).HasDefaultValueSql("now()");
       });
 
       modelBuilder.Entity<PairTip>(entity =>
       {
         entity.HasOne(e => e.Pair).WithMany(u => u.PairTips).HasForeignKey(e => e.PairId).IsRequired(true);
         entity.HasOne(e => e.Tip).WithMany(u => u.PairTips).HasForeignKey(e => e.TipId).IsRequired(true);
+        entity.Property(s => s.Created).HasDefaultValueSql("now()");
+        entity.Property(s => s.Modified).HasDefaultValueSql("now()");
       });
 
       modelBuilder.Entity<Sport>(entity =>
       {
+        entity.Property(s => s.Created).HasDefaultValueSql("now()");
+        entity.Property(s => s.Modified).HasDefaultValueSql("now()");
       });
 
       modelBuilder.Entity<SportTeam>(entity =>
       {
         entity.HasOne(e => e.Sport).WithMany(u => u.SportTeams).HasForeignKey(e => e.SportId).IsRequired(true);
+        entity.Property(s => s.Created).HasDefaultValueSql("now()");
+        entity.Property(s => s.Modified).HasDefaultValueSql("now()");
       });
 
 
@@ -69,6 +79,8 @@ namespace data.Context
       {
         entity.HasOne(e => e.SpecialOfferPair).WithMany(u => u.TicketsWithSpecialOffer).HasForeignKey(e => e.SpecialOfferPairId);
         entity.HasOne(e => e.User).WithMany(u => u.Tickets).HasForeignKey(e => e.UserId).IsRequired(true);
+        entity.Property(s => s.Created).HasDefaultValueSql("now()");
+        entity.Property(s => s.Modified).HasDefaultValueSql("now()");
       });
 
       modelBuilder.Entity<TicketPairTip>(entity =>
@@ -80,6 +92,8 @@ namespace data.Context
 
       modelBuilder.Entity<Tip>(entity =>
       {
+        entity.Property(s => s.Created).HasDefaultValueSql("now()");
+        entity.Property(s => s.Modified).HasDefaultValueSql("now()");
       });
     }
   }
