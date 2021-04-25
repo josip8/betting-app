@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace server.Controllers
 {
@@ -44,23 +46,23 @@ namespace server.Controllers
       if (!_context.Sport.Any() && !_context.Tip.Any())
       {
         var football = new Sport { Name = "Football" };
-        _  = await _context.Sport.AddAsync(football);
+        await _context.Sport.AddAsync(football);
         var tennis = new Sport { Name = "Tennis" };
-        _ = await _context.Sport.AddAsync(tennis);
+        await _context.Sport.AddAsync(tennis);
 
 
         // insert sport teams
-        _ = await _context.SportTeam.AddAsync(new SportTeam { Name = "Barcelona", Description = "Football club from Spain", Sport = football });
-        _ = await _context.SportTeam.AddAsync(new SportTeam { Name = "Real Madrid", Description = "Football club from Spain", Sport = football });
-        _ = await _context.SportTeam.AddAsync(new SportTeam { Name = "Atletico Madrid", Description = "Football club from Spain", Sport = football });
-        _ = await _context.SportTeam.AddAsync(new SportTeam { Name = "Sevilla", Description = "Football club from Spain", Sport = football });
-        _ = await _context.SportTeam.AddAsync(new SportTeam { Name = "Valencia", Description = "Football club from Spain", Sport = football });
+        await _context.SportTeam.AddAsync(new SportTeam { Name = "Barcelona", Description = "Football club from Spain", Sport = football });
+        await _context.SportTeam.AddAsync(new SportTeam { Name = "Real Madrid", Description = "Football club from Spain", Sport = football });
+        await _context.SportTeam.AddAsync(new SportTeam { Name = "Atletico Madrid", Description = "Football club from Spain", Sport = football });
+        await _context.SportTeam.AddAsync(new SportTeam { Name = "Sevilla", Description = "Football club from Spain", Sport = football });
+        await _context.SportTeam.AddAsync(new SportTeam { Name = "Valencia", Description = "Football club from Spain", Sport = football });
 
-        _ = await _context.SportTeam.AddAsync(new SportTeam { Name = "Novak Djokovic", Description = "No. 1 on ATP rankings", Sport = tennis });
-        _ = await _context.SportTeam.AddAsync(new SportTeam { Name = "Daniil Medvedev", Description = "No. 1 on ATP rankings", Sport = tennis });
-        _ = await _context.SportTeam.AddAsync(new SportTeam { Name = "Rafael Nadal", Description = "No. 1 on ATP rankings", Sport = tennis });
-        _ = await _context.SportTeam.AddAsync(new SportTeam { Name = "Roger Federer", Description = "No. 1 on ATP rankings", Sport = tennis });
-        _ = await _context.SportTeam.AddAsync(new SportTeam { Name = "Dominic Thiem", Description = "No. 1 on ATP rankings", Sport = tennis });
+        await _context.SportTeam.AddAsync(new SportTeam { Name = "Novak Djokovic", Description = "No. 1 on ATP rankings", Sport = tennis });
+        await _context.SportTeam.AddAsync(new SportTeam { Name = "Daniil Medvedev", Description = "No. 1 on ATP rankings", Sport = tennis });
+        await _context.SportTeam.AddAsync(new SportTeam { Name = "Rafael Nadal", Description = "No. 1 on ATP rankings", Sport = tennis });
+        await _context.SportTeam.AddAsync(new SportTeam { Name = "Roger Federer", Description = "No. 1 on ATP rankings", Sport = tennis });
+        await _context.SportTeam.AddAsync(new SportTeam { Name = "Dominic Thiem", Description = "No. 1 on ATP rankings", Sport = tennis });
 
 
         // insert tips
@@ -70,22 +72,22 @@ namespace server.Controllers
         var tip1X = new Tip { TipName = "1X", Description = "Host victory or draw" };
         var tip2X = new Tip { TipName = "2X", Description = "Guest victory or draw" };
         var tip12 = new Tip { TipName = "12", Description = "Not a draw" };
-        _ = await _context.Tip.AddAsync(tip1);
-        _ = await _context.Tip.AddAsync(tip2);
-        _ = await _context.Tip.AddAsync(tipX);
-        _ = await _context.Tip.AddAsync(tip1X);
-        _ = await _context.Tip.AddAsync(tip2X);
-        _ = await _context.Tip.AddAsync(tip12);
+        await _context.Tip.AddAsync(tip1);
+        await _context.Tip.AddAsync(tip2);
+        await _context.Tip.AddAsync(tipX);
+        await _context.Tip.AddAsync(tip1X);
+        await _context.Tip.AddAsync(tip2X);
+        await _context.Tip.AddAsync(tip12);
 
         // insert sporttips
-        _ = await _context.SportTip.AddAsync(new SportTip { Sport = football, Tip = tip1 });
-        _ = await _context.SportTip.AddAsync(new SportTip { Sport = football, Tip = tip2 });
-        _ = await _context.SportTip.AddAsync(new SportTip { Sport = football, Tip = tipX });
-        _ = await _context.SportTip.AddAsync(new SportTip { Sport = football, Tip = tip1X });
-        _ = await _context.SportTip.AddAsync(new SportTip { Sport = football, Tip = tip2X });
-        _ = await _context.SportTip.AddAsync(new SportTip { Sport = football, Tip = tip12 });
-        _ = await _context.SportTip.AddAsync(new SportTip { Sport = tennis, Tip = tip1 });
-        _ = await _context.SportTip.AddAsync(new SportTip { Sport = tennis, Tip = tip2 });
+        await _context.SportTip.AddAsync(new SportTip { Sport = football, Tip = tip1 });
+        await _context.SportTip.AddAsync(new SportTip { Sport = football, Tip = tip2 });
+        await _context.SportTip.AddAsync(new SportTip { Sport = football, Tip = tipX });
+        await _context.SportTip.AddAsync(new SportTip { Sport = football, Tip = tip1X });
+        await _context.SportTip.AddAsync(new SportTip { Sport = football, Tip = tip2X });
+        await _context.SportTip.AddAsync(new SportTip { Sport = football, Tip = tip12 });
+        await _context.SportTip.AddAsync(new SportTip { Sport = tennis, Tip = tip1 });
+        await _context.SportTip.AddAsync(new SportTip { Sport = tennis, Tip = tip2 });
 
         _context.SaveChanges();
       }
@@ -93,6 +95,95 @@ namespace server.Controllers
       return Ok(tickets);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GeneratePairs()
+    {
+      // generate 5 pairs for football and 5 pairs for tennis - in next 30 mins
+      foreach (int value in Enumerable.Range(1, 5))
+      {
+        await GeneratePairsForSport("Football");
+        await GeneratePairsForSport("Tennis");
+      }
+      return Ok();
+    }
+
+    private async Task GeneratePairsForSport(string sportName)
+    {
+      var sportTeams = _context.SportTeam.Where(x => x.Sport.Name == sportName);
+      var teamHome = sportTeams.Skip(GenerateRandomInt(0, sportTeams.Count())).Take(1).FirstOrDefault();
+      var teamAway = sportTeams.Where(x => x != teamHome).Skip(GenerateRandomInt(0, sportTeams.Count() - 1)).Take(1).FirstOrDefault();
+
+      bool IsSpecialOffer = GenerateRandomInt(0, 2) == 0;
+
+      var newPair = new Pair
+      {
+        HomeTeam = teamHome,
+        AwayTeam = teamAway,
+        SpecialOffer = IsSpecialOffer,
+        SpecialOfferModifier = 1.1f
+      };
+      await _context.Pair.AddAsync(newPair);
+
+      float tip1 = GenerateRandomFloat(GenerateRandomInt(1, 5));
+
+      foreach (var sportTip in _context.SportTip.Where(x => x.SportId == teamHome.SportId).Include(x => x.Tip))
+      {
+        var newPairTip = new PairTip
+        {
+          Pair = newPair,
+          Tip = sportTip.Tip,
+          Coefficient = CalculateCoefficient(sportTip.Tip.TipName, tip1)
+        };
+
+        await _context.PairTip.AddAsync(newPairTip);
+      }
+      _context.SaveChanges();
+    }
+
+    private static float CalculateCoefficient(string tipName, float tip1)
+    {
+      float coefficient;
+      switch (tipName)
+      {
+        case "1":
+          coefficient = tip1;
+          break;
+        case "1X":
+          coefficient = (float)(tip1 / 1.45);
+          break;
+        case "2":
+          coefficient = (float)(7 / tip1);
+          break;
+        case "2X":
+          coefficient = (float)(3 / tip1);
+          break;
+        case "X":
+          coefficient = GenerateRandomFloat(GenerateRandomInt(2, 4));
+          break;
+        case "12":
+          coefficient = 1.25f;
+          break;
+        default:
+          throw new Exception("Tip does not exist");
+      }
+
+      return coefficient;
+
+    }
+
+    private static int GenerateRandomInt(int a, int b)
+    {
+      Random r = new();
+      int randomInteger = r.Next(a, b);
+      return randomInteger;
+    }
+
+    private static float GenerateRandomFloat(int addToFloat)
+    {
+      Random r = new();
+      double randomDouble = r.NextDouble() + addToFloat;
+      return (float)randomDouble;
+    }
 
   }
 }
