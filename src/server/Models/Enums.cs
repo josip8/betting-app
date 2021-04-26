@@ -18,4 +18,12 @@ namespace server.Models
     Success,
     Fail
   }
+
+  public enum TransactionType
+  {
+    Payment,
+    Withdraw,
+    TicketPayment,
+    TicketWin
+  }
 }

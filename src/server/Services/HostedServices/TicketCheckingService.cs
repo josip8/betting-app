@@ -1,4 +1,5 @@
 ﻿using data.Context;
+using data.EfCoreModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using server.Models;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace server.Services.HostedServices
 {
@@ -34,6 +36,16 @@ namespace server.Services.HostedServices
           {
             item.Status = (int)TicketStatus.Success;
             item.User.WalletAmount += item.PrizeAmount;
+
+            var transaction = new Transaction
+            {
+              User = item.User,
+              Amount = item.PrizeAmount,
+              NewAmount = item.User.WalletAmount + item.PrizeAmount,
+              OldAmount = item.User.WalletAmount,
+              TransactionType = (int)TransactionType.TicketWin
+            };
+            await _context.Transaction.AddAsync(transaction);
           }
         }
 

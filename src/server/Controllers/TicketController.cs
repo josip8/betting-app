@@ -57,6 +57,16 @@ namespace server.Controllers
       ticket.Coefficient = coefficient;
       await _context.Ticket.AddAsync(ticket);
 
+      var transaction = new Transaction
+      {
+        User = user,
+        Amount = -newTicket.MoneyAmount,
+        NewAmount = user.WalletAmount - newTicket.MoneyAmount,
+        OldAmount = user.WalletAmount,
+        TransactionType = (int)TransactionType.TicketPayment
+      };
+      await _context.Transaction.AddAsync(transaction);
+
       _context.SaveChanges();
       return Ok();
     }

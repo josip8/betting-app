@@ -3,6 +3,7 @@ using data.EfCoreModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using server.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,8 +31,50 @@ namespace server.Controllers
       {
         return BadRequest("Cannot add negative value");
       }
+
+      var transaction = new Transaction
+      {
+        User = user,
+        Amount = amount,
+        NewAmount = user.WalletAmount + amount,
+        OldAmount = user.WalletAmount,
+        TransactionType = (int)TransactionType.Payment
+      };
+
+      await _context.Transaction.AddAsync(transaction);
       user.WalletAmount += amount;
       _context.Users.Update(user);
+
+      _context.SaveChanges();
+      return Ok(user.WalletAmount);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> WithdrawFromWallet([FromBody] decimal amount)
+    {
+      var user = await _userManager.FindByEmailAsync("test@test.com");
+      if (amount < 0)
+      {
+        return BadRequest("Cannot add negative value");
+      }
+      if(amount > user.WalletAmount)
+      {
+        return BadRequest("Insufficient funds");
+      }
+
+      var transaction = new Transaction
+      {
+        User = user,
+        Amount = -amount,
+        NewAmount = user.WalletAmount - amount,
+        OldAmount = user.WalletAmount,
+        TransactionType = (int)TransactionType.Withdraw
+      };
+      await _context.Transaction.AddAsync(transaction);
+
+      user.WalletAmount -= amount;
+      _context.Users.Update(user);
+
       _context.SaveChanges();
       return Ok(user.WalletAmount);
     }
