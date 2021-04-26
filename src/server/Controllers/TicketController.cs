@@ -26,13 +26,16 @@ namespace server.Controllers
     }
 
     [HttpPost]
-    public async Task<IActionResult> NewTicket([FromBody] NewTicket newTicket)
+    public async Task<IActionResult> New([FromBody] NewTicket newTicket)
     {
       if (!ModelState.IsValid) return BadRequest("Invalid model");
       var user = await _userManager.FindByEmailAsync("test@test.com");
       if (newTicket.MoneyAmount > user.WalletAmount) return BadRequest("Insufficient funds");
-      float coefficient = 1;
+      if (newTicket.MoneyAmount <= 0) return BadRequest("Money amount must be greater than zero");
+      var allPairs = newTicket.PairTips.Select(x => _context.Pair.FirstOrDefault(p => p.PairTips.Any(pt => p == pt.Pair)).Id);
+      if (allPairs.Distinct().Count() != allPairs.Count()) return BadRequest("Duplicate pairs");
 
+      float coefficient = 1;
       var ticket = new Ticket
       {
         Status = (int)TicketStatus.Pending,
@@ -44,10 +47,10 @@ namespace server.Controllers
         // validate and calculate
         var pairTip = _context.PairTip.Include(x => x.Pair).FirstOrDefault(x => x.Id == pairTipId);
         if (pairTip?.Status != (int)PairStatus.Pending || pairTip.Coefficient < 1) return BadRequest("Pair/tip not valid");
-        if (newTicket.SuperTip == pairTip.Id) 
+        if (newTicket.SuperTip == pairTip.Id)
         {
           coefficient *= pairTip.Pair.SpecialOfferModifier;
-        } 
+        }
         coefficient *= pairTip.Coefficient;
         await _context.TicketPairTip.AddAsync(new TicketPairTip { Ticket = ticket, PairTip = pairTip });
       }
@@ -71,5 +74,33 @@ namespace server.Controllers
       return Ok();
     }
 
+    [HttpGet("{id:int}")]
+    public IActionResult Info(int id)
+    {
+      var ticket = _context.Ticket.FirstOrDefault(x => x.Id == id);
+      if (ticket == null) return BadRequest("Ticket with provided id does not exist");
+      return Ok(new
+      {
+        ticket.Id,
+        ticket.Status,
+        ticket.PrizeAmount,
+        ticket.MoneyPaid,
+        ticket.ManipulativeCosts,
+        ticket.Coefficient,
+        TicketPairTips = ticket.TicketPairTips.Select(x => new
+        {
+          x.PairTipId,
+          x.PairTip.Tip.TipName,
+          HomeTeam = x.PairTip.Pair.HomeTeam.Name,
+          AwayTeam = x.PairTip.Pair.AwayTeam.Name,
+          AllTips = x.PairTip.Pair.PairTips.Select(x => new
+          {
+            x.Tip.TipName,
+            x.Coefficient,
+            x.Id
+          })
+        })
+      });
+    }
   }
 }

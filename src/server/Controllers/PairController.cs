@@ -27,20 +27,23 @@ namespace server.Controllers
         .Include(x => x.HomeTeam)
         .Include(x => x.AwayTeam);
 
-      return Ok(pairs.Select(x => new
+      return Ok(new
       {
-        HomeTeam = x.HomeTeam.Name,
-        AwayTeam = x.AwayTeam.Name,
-        x.Id,
-        x.GameStart,
-        PairTips = x.PairTips.Select(pt => new
+        pairs = pairs.Select(x => new
         {
-          pt.Id,
-          pt.Coefficient,
-          pt.Status,
-          pt.Tip.TipName
+          HomeTeam = x.HomeTeam.Name,
+          AwayTeam = x.AwayTeam.Name,
+          x.Id,
+          x.GameStart,
+          PairTips = x.PairTips.Select(pt => new
+          {
+            pt.Id,
+            pt.Coefficient,
+            pt.Status,
+            pt.Tip.TipName
+          })
         })
-      }));
+      });
     }
   }
 }

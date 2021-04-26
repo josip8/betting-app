@@ -145,31 +145,16 @@ namespace server.Controllers
 
     private static float CalculateCoefficient(string tipName, float tip1)
     {
-      float coefficient;
-      switch (tipName)
+      var coefficient = tipName switch
       {
-        case "1":
-          coefficient = tip1;
-          break;
-        case "1X":
-          coefficient = (float)(tip1 / 1.45);
-          break;
-        case "2":
-          coefficient = (float)(7 / tip1);
-          break;
-        case "2X":
-          coefficient = (float)(3 / tip1);
-          break;
-        case "X":
-          coefficient = GenerateRandomFloat(GenerateRandomInt(2, 4));
-          break;
-        case "12":
-          coefficient = 1.25f;
-          break;
-        default:
-          throw new Exception("Tip does not exist");
-      }
-
+        "1" => tip1,
+        "1X" => (float)(tip1 / 1.45),
+        "2" => (float)(7 / tip1),
+        "2X" => (float)(3 / tip1),
+        "X" => GenerateRandomFloat(GenerateRandomInt(2, 4)),
+        "12" => 1.25f,
+        _ => throw new Exception("Tip does not exist"),
+      };
       return coefficient > 1 ? coefficient : 0;
     }
 

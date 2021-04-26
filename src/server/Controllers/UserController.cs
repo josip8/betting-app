@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace server.Controllers
 {
-  [Route("api/[controller]")]
+  [Route("api/[controller]/[action]")]
   [ApiController]
   public class UserController : ControllerBase
   {
@@ -23,13 +23,13 @@ namespace server.Controllers
       _userManager = userManager;
     }
 
-    [HttpPost]
-    public async Task<IActionResult> AddToWallet([FromBody] decimal amount)
+    [HttpPut("{amount:decimal}")]
+    public async Task<IActionResult> AddToWallet(decimal amount)
     {
       var user = await _userManager.FindByEmailAsync("test@test.com");
-      if(amount < 0)
+      if(amount <= 0)
       {
-        return BadRequest("Cannot add negative value");
+        return BadRequest("Cannot add zero or negative value");
       }
 
       var transaction = new Transaction
@@ -49,13 +49,13 @@ namespace server.Controllers
       return Ok(user.WalletAmount);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> WithdrawFromWallet([FromBody] decimal amount)
+    [HttpPut("{amount:decimal}")]
+    public async Task<IActionResult> WithdrawFromWallet(decimal amount)
     {
       var user = await _userManager.FindByEmailAsync("test@test.com");
-      if (amount < 0)
+      if (amount <= 0)
       {
-        return BadRequest("Cannot add negative value");
+        return BadRequest("Cannot add zero or negative value");
       }
       if(amount > user.WalletAmount)
       {
