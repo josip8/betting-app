@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using server.Services.HostedServices;
 
 namespace server
 {
@@ -34,12 +35,12 @@ namespace server
 
       services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<BettingAppDbContext>().AddDefaultTokenProviders();
 
-
       services.AddControllers();
       services.AddSwaggerGen(c =>
       {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "server", Version = "v1" });
       });
+      services.AddHostedService<PairCheckingService>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

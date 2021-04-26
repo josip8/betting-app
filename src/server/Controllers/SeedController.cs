@@ -9,6 +9,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using server.Services.Helpers;
+using static server.Services.Helpers.RandomService;
 
 namespace server.Controllers
 {
@@ -169,20 +171,6 @@ namespace server.Controllers
       }
 
       return coefficient > 1 ? coefficient : 0;
-    }
-
-    private static int GenerateRandomInt(int a, int b)
-    {
-      Random r = new();
-      int randomInteger = r.Next(a, b);
-      return randomInteger;
-    }
-
-    private static float GenerateRandomFloat(int addToFloat)
-    {
-      Random r = new();
-      double randomDouble = r.NextDouble() + addToFloat;
-      return (float)randomDouble;
     }
 
   }
