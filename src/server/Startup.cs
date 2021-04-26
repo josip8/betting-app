@@ -40,7 +40,10 @@ namespace server
       {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "server", Version = "v1" });
       });
+
+      // register services
       services.AddHostedService<PairCheckingService>();
+      services.AddHostedService<TicketCheckingService>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
