@@ -19,6 +19,9 @@ namespace server.Controllers
       _context = context;
     }
 
+    /// <summary>
+    /// Returns all active pairs you can bet on
+    /// </summary>
     [HttpGet]
     public IActionResult AllActivePairs()
     {
@@ -27,9 +30,7 @@ namespace server.Controllers
         .Include(x => x.HomeTeam)
         .Include(x => x.AwayTeam);
 
-      return Ok(new
-      {
-        pairs = pairs.Select(x => new
+      return Ok(pairs.Select(x => new
         {
           HomeTeam = x.HomeTeam.Name,
           AwayTeam = x.AwayTeam.Name,
@@ -42,8 +43,8 @@ namespace server.Controllers
             pt.Status,
             pt.Tip.TipName
           })
-        })
-      });
+        }
+      ));
     }
   }
 }

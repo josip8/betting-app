@@ -25,6 +25,9 @@ namespace server.Controllers
       _userManager = userManager;
     }
 
+    /// <summary>
+    /// Creates new ticket
+    /// </summary>
     [HttpPost]
     public async Task<IActionResult> New([FromBody] NewTicket newTicket)
     {
@@ -74,6 +77,10 @@ namespace server.Controllers
       return Ok();
     }
 
+
+    /// <summary>
+    /// Returns ticket info by ticket id
+    /// </summary>
     [HttpGet("{id:int}")]
     public IActionResult Info(int id)
     {
@@ -101,6 +108,25 @@ namespace server.Controllers
           })
         })
       });
+    }
+
+    /// <summary>
+    /// Returns list off all user tickets
+    /// </summary>
+    [HttpGet]
+    public async Task<IActionResult> MyTickets()
+    {
+      var user = await _userManager.FindByEmailAsync("test@test.com");
+      var myTickets = _context.Ticket.Where(x => x.User == user).Select(x => new
+      {
+        x.MoneyPaid,
+        x.Id,
+        x.Created,
+        x.PrizeAmount,
+        x.ManipulativeCosts,
+        x.Status
+      });
+      return Ok(myTickets);
     }
   }
 }

@@ -26,6 +26,13 @@ namespace server.Controllers
       _userManager = userManager;
     }
 
+    /// <summary>
+    /// Seeds database with:
+    /// - one user (test@test.com, Test123!)
+    /// - two sports (Football and Tennis)
+    /// - 5 football teams and 5 tennis players 
+    /// - 6 different kinds of tips and connects them with Sport table
+    /// </summary>
     [HttpGet]
     public async Task<IActionResult> SeedUserSportAndTips()
     {
@@ -97,6 +104,9 @@ namespace server.Controllers
       return Ok(tickets);
     }
 
+    /// <summary>
+    /// Generates 10 pairs and tips with start time in next 30 minutes
+    /// </summary>
     [HttpGet]
     public async Task<IActionResult> GeneratePairs()
     {

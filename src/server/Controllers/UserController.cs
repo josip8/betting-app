@@ -23,6 +23,9 @@ namespace server.Controllers
       _userManager = userManager;
     }
 
+    /// <summary>
+    /// Adds specified amount to user wallet
+    /// </summary>
     [HttpPut("{amount:decimal}")]
     public async Task<IActionResult> AddToWallet(decimal amount)
     {
@@ -49,6 +52,9 @@ namespace server.Controllers
       return Ok(user.WalletAmount);
     }
 
+    /// <summary>
+    /// Withdraw specified amount from user wallet
+    /// </summary>
     [HttpPut("{amount:decimal}")]
     public async Task<IActionResult> WithdrawFromWallet(decimal amount)
     {
