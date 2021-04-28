@@ -36,7 +36,6 @@ namespace server.Services.HostedServices
           else
           {
             item.Status = (int)TicketStatus.Success;
-            item.User.WalletAmount += item.PrizeAmount;
 
             var transaction = new Transaction
             {
@@ -46,7 +45,9 @@ namespace server.Services.HostedServices
               OldAmount = item.User.WalletAmount,
               TransactionType = (int)TransactionType.TicketWin
             };
+            item.User.WalletAmount += item.PrizeAmount;
             await _context.Transaction.AddAsync(transaction);
+            _context.Users.Update(item.User);
           }
         }
 

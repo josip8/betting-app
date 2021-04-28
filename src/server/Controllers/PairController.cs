@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using server.Models;
 
 namespace server.Controllers
 {
@@ -33,19 +34,20 @@ namespace server.Controllers
         .Include(x => x.AwayTeam);
 
       return Ok(pairs.Select(x => new
+      {
+        HomeTeam = x.HomeTeam.Name,
+        AwayTeam = x.AwayTeam.Name,
+        x.Id,
+        x.GameStart,
+        PairTips = x.PairTips.Select(pt => new
         {
-          HomeTeam = x.HomeTeam.Name,
-          AwayTeam = x.AwayTeam.Name,
-          x.Id,
-          x.GameStart,
-          PairTips = x.PairTips.Select(pt => new
-          {
-            pt.Id,
-            pt.Coefficient,
-            pt.Status,
-            pt.Tip.TipName
-          })
-        }
+          pt.Id,
+          pt.Coefficient,
+          pt.Status,
+          StatusString = ((PairStatus)pt.Status).ToString(),
+          pt.Tip.TipName
+        })
+      }
       ));
     }
   }

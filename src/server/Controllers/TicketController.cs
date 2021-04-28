@@ -77,6 +77,8 @@ namespace server.Controllers
         TransactionType = (int)TransactionType.TicketPayment
       };
       await _context.Transaction.AddAsync(transaction);
+      user.WalletAmount = transaction.NewAmount;
+      _context.Users.Update(user);
 
       _context.SaveChanges();
       return Ok();
@@ -140,7 +142,8 @@ namespace server.Controllers
         x.Created,
         x.PrizeAmount,
         x.ManipulativeCosts,
-        x.Status
+        x.Status,
+        StatusString = ((TicketStatus)x.Status).ToString()
       });
       return Ok(myTickets);
     }
