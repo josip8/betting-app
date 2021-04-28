@@ -36,8 +36,6 @@ namespace server.Controllers
     [HttpGet]
     public async Task<IActionResult> SeedUserSportAndTips()
     {
-      var tickets = _context.Ticket.ToList();
-
       var user = await _userManager.FindByEmailAsync("test@test.com");
       if (user == null)
       {
@@ -101,7 +99,7 @@ namespace server.Controllers
         _context.SaveChanges();
       }
 
-      return Ok(tickets);
+      return Ok();
     }
 
     /// <summary>

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using data.Context;
 using data.EfCoreModels;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +17,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using server.Models;
+using server.Services;
 using server.Services.HostedServices;
 
 namespace server
@@ -40,6 +45,30 @@ namespace server
       services.AddControllers();
       // .AddNewtonsoftJson(options =>options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
+
+      var jwtTokenConfig = Configuration.GetSection("jwtTokenConfig").Get<JwtTokenConfig>();
+      services.AddAuthentication(x =>
+      {
+        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+      }).AddJwtBearer(x =>
+      {
+        // false only for development scenarios
+        x.RequireHttpsMetadata = false;
+        x.SaveToken = true;
+        x.TokenValidationParameters = new TokenValidationParameters
+        {
+          ValidateIssuer = true,
+          ValidIssuer = jwtTokenConfig.Issuer,
+          ValidateIssuerSigningKey = true,
+          IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtTokenConfig.Secret)),
+          ValidAudience = jwtTokenConfig.Audience,
+          ValidateAudience = true,
+          ValidateLifetime = true,
+          ClockSkew = TimeSpan.FromMinutes(1)
+        };
+      });
+
       services.AddSwaggerGen(c =>
       {
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "Betting App", Version = "v1" });
@@ -49,6 +78,8 @@ namespace server
       });
 
       // register services
+      services.AddSingleton(jwtTokenConfig);
+      services.AddScoped<IAuthService, AuthService>();
       services.AddHostedService<PairCheckingService>();
       services.AddHostedService<TicketCheckingService>();
     }
