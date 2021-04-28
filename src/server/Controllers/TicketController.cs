@@ -45,7 +45,8 @@ namespace server.Controllers
       var ticket = new Ticket
       {
         Status = (int)TicketStatus.Pending,
-        MoneyPaid = newTicket.MoneyAmount
+        MoneyPaid = newTicket.MoneyAmount,
+        User = user
       };
 
       foreach (var pairTipId in newTicket.PairTips)
@@ -56,6 +57,7 @@ namespace server.Controllers
         if (newTicket.SuperTip == pairTip.Id)
         {
           coefficient *= pairTip.Pair.SpecialOfferModifier;
+          ticket.SpecialOfferPair = pairTip.Pair;
         }
         coefficient *= pairTip.Coefficient;
         await _context.TicketPairTip.AddAsync(new TicketPairTip { Ticket = ticket, PairTip = pairTip });
@@ -87,12 +89,19 @@ namespace server.Controllers
     [HttpGet("{id:int}")]
     public IActionResult Info(int id)
     {
-      var ticket = _context.Ticket.FirstOrDefault(x => x.Id == id);
+      var ticket = _context.Ticket
+        .Include(x => x.TicketPairTips).ThenInclude(x => x.PairTip).ThenInclude(x => x.Tip)
+        .Include(x => x.TicketPairTips).ThenInclude(x => x.PairTip).ThenInclude(x => x.Pair).ThenInclude(x => x.AwayTeam)
+        .Include(x => x.TicketPairTips).ThenInclude(x => x.PairTip).ThenInclude(x => x.Pair).ThenInclude(x => x.HomeTeam)
+        .Include(x => x.TicketPairTips).ThenInclude(x => x.PairTip).ThenInclude(x => x.Pair).ThenInclude(x => x.PairTips).ThenInclude(x => x.Tip)
+        .FirstOrDefault(x => x.Id == id);
+
       if (ticket == null) return BadRequest("Ticket with provided id does not exist");
       return Ok(new
       {
         ticket.Id,
         ticket.Status,
+        StatusString = ((TicketStatus)ticket.Status).ToString(),
         ticket.PrizeAmount,
         ticket.MoneyPaid,
         ticket.ManipulativeCosts,
@@ -101,13 +110,16 @@ namespace server.Controllers
         {
           x.PairTipId,
           x.PairTip.Tip.TipName,
+          x.PairTip.Pair.GameStart,
           HomeTeam = x.PairTip.Pair.HomeTeam.Name,
           AwayTeam = x.PairTip.Pair.AwayTeam.Name,
           AllTips = x.PairTip.Pair.PairTips.Select(x => new
           {
             x.Tip.TipName,
             x.Coefficient,
-            x.Id
+            x.Id,
+            x.Status,
+            StatusString = ((PairStatus)ticket.Status).ToString()
           })
         })
       });

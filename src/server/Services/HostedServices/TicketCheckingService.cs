@@ -23,8 +23,9 @@ namespace server.Services.HostedServices
     {
       while (!stoppingToken.IsCancellationRequested)
       {
-        var ticketsToCheck = _context.Ticket.Where(x => x.Status == (int)TicketStatus.Pending 
-          && x.TicketPairTips.All(y => y.PairTip.Status != (int)PairStatus.Pending));
+        var ticketsToCheck = _context.Ticket.Where(x => x.Status == (int)TicketStatus.Pending
+          && x.TicketPairTips.All(y => y.PairTip.Status != (int)PairStatus.Pending))
+          .Include(x => x.TicketPairTips).ThenInclude(x => x.PairTip).Include(x => x.User);
 
         foreach(var item in ticketsToCheck)
         {

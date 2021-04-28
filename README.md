@@ -1,4 +1,4 @@
-# Betting App :soccer:
+# Betting App :soccer: :tennis: :basketball:
 
 ### Technologies used:
 - ASP.NET Core 5
@@ -21,6 +21,12 @@ npm run serve
 ```
 
 ---
+### Docs
+Open swagger api documentation on `http://localhost:5000/swagger`.
+Postman collection included in folder.
+
+---
+
 #### TO DO
 - Refresh tokens
 - Vuejs client
