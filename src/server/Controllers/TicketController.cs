@@ -10,9 +10,11 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace server.Controllers
 {
+  [Authorize]
   [Route("api/[controller]/[action]")]
   [ApiController]
   public class TicketController : ControllerBase
@@ -32,7 +34,8 @@ namespace server.Controllers
     public async Task<IActionResult> New([FromBody] NewTicket newTicket)
     {
       if (!ModelState.IsValid) return BadRequest("Invalid model");
-      var user = await _userManager.FindByEmailAsync("test@test.com");
+      var username = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name);
+      var user = _context.Users.FirstOrDefault(user => user.UserName == username.Value);
       if (newTicket.MoneyAmount > user.WalletAmount) return BadRequest("Insufficient funds");
       if (newTicket.MoneyAmount <= 0) return BadRequest("Money amount must be greater than zero");
       var allPairs = newTicket.PairTips.Select(x => _context.Pair.FirstOrDefault(p => p.PairTips.Any(pt => p == pt.Pair)).Id);
@@ -116,7 +119,8 @@ namespace server.Controllers
     [HttpGet]
     public async Task<IActionResult> MyTickets()
     {
-      var user = await _userManager.FindByEmailAsync("test@test.com");
+      var username = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name);
+      var user = _context.Users.FirstOrDefault(user => user.UserName == username.Value);
       var myTickets = _context.Ticket.Where(x => x.User == user).Select(x => new
       {
         x.MoneyPaid,

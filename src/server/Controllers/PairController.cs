@@ -6,9 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace server.Controllers
 {
+  [Authorize]
   [Route("api/[controller]/[action]")]
   [ApiController]
   public class PairController : ControllerBase

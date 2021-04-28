@@ -64,8 +64,7 @@ namespace server
           IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtTokenConfig.Secret)),
           ValidAudience = jwtTokenConfig.Audience,
           ValidateAudience = true,
-          ValidateLifetime = true,
-          ClockSkew = TimeSpan.FromMinutes(1)
+          ValidateLifetime = true
         };
       });
 

@@ -11,9 +11,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using server.Services.Helpers;
 using static server.Services.Helpers.RandomService;
+using Microsoft.AspNetCore.Authorization;
 
 namespace server.Controllers
 {
+  [Authorize]
   [Route("api/[controller]/[action]")]
   [ApiController]
   public class SeedController : ControllerBase

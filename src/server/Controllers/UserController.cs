@@ -82,10 +82,12 @@ namespace server.Controllers
     /// <summary>
     /// Adds specified amount to user wallet
     /// </summary>
+    [Authorize]
     [HttpPut("{amount:decimal}")]
     public async Task<IActionResult> AddToWallet(decimal amount)
     {
-      var user = await _userManager.FindByEmailAsync("test@test.com");
+      var username = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name);
+      var user = _context.Users.FirstOrDefault(user => user.UserName == username.Value);
       if(amount <= 0)
       {
         return BadRequest("Cannot add zero or negative value");
@@ -111,10 +113,12 @@ namespace server.Controllers
     /// <summary>
     /// Withdraw specified amount from user wallet
     /// </summary>
+    [Authorize]
     [HttpPut("{amount:decimal}")]
     public async Task<IActionResult> WithdrawFromWallet(decimal amount)
     {
-      var user = await _userManager.FindByEmailAsync("test@test.com");
+      var username = User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name);
+      var user = _context.Users.FirstOrDefault(user => user.UserName == username.Value);
       if (amount <= 0)
       {
         return BadRequest("Cannot add zero or negative value");
