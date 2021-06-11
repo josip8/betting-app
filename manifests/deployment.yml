@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: bettingapp 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bettingapp
+  template:
+    metadata:
+      labels:
+        app: bettingapp 
+    spec:
+      containers:
+        - name: bettingapp 
+          image: cregistryjosiptest.azurecr.io/bettingapp
+          ports:
+          - containerPort: 5000
